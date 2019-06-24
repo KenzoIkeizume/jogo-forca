@@ -1,6 +1,8 @@
 (ns my-proj.core
   (:gen-class))
 
+(declare jogo)
+
 (def total-de-vidas 6)
 
 (defn perdeu []
@@ -18,12 +20,23 @@
 (defn acertou-a-palavra-toda? [palavra acertos]
   (empty? (letras-faltantes palavra acertos)))
 
+(defn le-letra! [] (read-line))
+
+(defn acertou? [chute palavra]
+  (.contains chute palavra))
+
+(defn avalia-chute [chute vidas palavra acertos]
+  (print chute)
+  (if (acertou? chute palavra)
+    (jogo vidas palavra (conj acertos chute))
+    (jogo (dec vidas) palavra acertos)))
+
 (defn jogo [vidas palavra acertos]
   (if (= vidas 0)
     (perdeu)
     (if (acertou-a-palavra-toda? palavra acertos)
       (ganhou)
-      (print "Chuta, amigo!"))))
+      (avalia-chute (le-letra!) vidas palavra acertos))))
 
 (defn -main
   "I don't do a whole lot ... yet."
